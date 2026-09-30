@@ -1,8 +1,7 @@
 import os
 import streamlit as st
 from crew import execute_stage
-from utils.docx_exporter import convert_markdown_to_docx
-
+from utils.docx_exporter import markdown_to_docx
 # Page Configuration
 st.set_page_config(
     page_title="InsightEngine | Multi-Agent AI Studio",
