@@ -12,7 +12,9 @@ def get_llm():
         raise ValueError("GROQ_API_KEY is not configured.")
 
     return LLM(
-        model="groq/openai/gpt-oss-120b",
+        model="openai/gpt-oss-120b",
         api_key=api_key,
+        base_url="https://api.groq.com/openai/v1",
+        custom_openai=True,
         temperature=0.2,
     )
