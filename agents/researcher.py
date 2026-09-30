@@ -1,16 +1,35 @@
 from crewai import Agent
-from config.llm_config import get_groq_llm
 
-def create_researcher_agent(model_name: str):
-    """
-    Creates the Senior Technical Researcher agent instance.
-    """
+from crew.llm import get_llm
+from tools.web_search import WebSearchTool
+
+
+def create_researcher():
+
+    search_tool = WebSearchTool()
+
     return Agent(
-        role="Senior Technical Researcher",
-        goal="Gather exhaustive, factual, and structured information on the target research subject.",
-        backstory="""You are a elite technical researcher with a knack for deep synthesis.
-        You extract core concepts, historical context, underlying mechanisms, and current industry trends.""",
-        verbose=True,
+        role="Web Research Specialist",
+
+        goal=(
+            "Find reliable evidence and relevant sources "
+            "that answer the research question."
+        ),
+
+        backstory=(
+            "You are a careful web research specialist. "
+            "You search for official sources, academic material, "
+            "government information, research organizations, "
+            "reputable reports, and recent evidence."
+        ),
+
+        tools=[search_tool],
+
+        llm=get_llm(),
+
+        verbose=False,
+
         allow_delegation=False,
-        llm=get_groq_llm(model_name=model_name)
+
+        max_iter=8,
     )

@@ -1,16 +1,30 @@
 from crewai import Agent
-from config.llm_config import get_groq_llm
 
-def create_writer_agent(model_name: str):
-    """
-    Creates the Lead Technical Writer agent instance.
-    """
+from crew.llm import get_llm
+
+
+def create_writer():
+
     return Agent(
-        role="Lead Technical Writer",
-        goal="Transform analyzed insights into a publication-grade, beautifully formatted report.",
-        backstory="""You are an expert technical author. You craft clear, persuasive, and structured reports
-        featuring executive summaries, organized sections, and impactful bullet points.""",
-        verbose=True,
+        role="Research Report Writer",
+
+        goal=(
+            "Create a clear, professional research report "
+            "using the verified evidence."
+        ),
+
+        backstory=(
+            "You are an experienced research writer. "
+            "You turn verified research into a structured "
+            "and readable report while clearly distinguishing "
+            "evidence, interpretation, and uncertainty."
+        ),
+
+        llm=get_llm(),
+
+        verbose=False,
+
         allow_delegation=False,
-        llm=get_groq_llm(model_name=model_name)
+
+        max_iter=6,
     )
