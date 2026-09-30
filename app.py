@@ -1,5 +1,4 @@
 import os
-from textwrap import dedent
 
 import streamlit as st
 
@@ -20,492 +19,488 @@ st.set_page_config(
 
 # ============================================================
 # CUSTOM CSS
+# Use st.html() instead of st.markdown() for HTML/CSS.
 # ============================================================
 
-st.markdown(
-    dedent(
-        """
-        <style>
+st.html(
+    """
+    <style>
 
-        /* ==================================================
-           GLOBAL
-        ================================================== */
+    /* =====================================================
+       GLOBAL
+    ===================================================== */
 
-        .stApp {
-            background:
-                radial-gradient(
-                    circle at 10% 10%,
-                    rgba(99, 102, 241, 0.10),
-                    transparent 30%
-                ),
-                radial-gradient(
-                    circle at 90% 20%,
-                    rgba(14, 165, 233, 0.08),
-                    transparent 30%
-                ),
-                #f8fafc;
-        }
+    .stApp {
+        background:
+            radial-gradient(
+                circle at 10% 10%,
+                rgba(99, 102, 241, 0.10),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at 90% 20%,
+                rgba(14, 165, 233, 0.08),
+                transparent 30%
+            ),
+            #f8fafc;
+    }
+
+    .block-container {
+        max-width: 1180px;
+        padding-top: 2rem;
+        padding-bottom: 4rem;
+    }
+
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+
+    .hero {
+        padding: 2.5rem 1rem 2rem 1rem;
+        text-align: center;
+    }
+
+    .hero-badge {
+        display: inline-block;
+
+        padding: 0.45rem 0.85rem;
+
+        border-radius: 999px;
+
+        background: rgba(99, 102, 241, 0.10);
+
+        border: 1px solid rgba(99, 102, 241, 0.15);
+
+        color: #4f46e5;
+
+        font-size: 0.78rem;
+
+        font-weight: 700;
+
+        letter-spacing: 0.04em;
+
+        margin-bottom: 1rem;
+    }
+
+    .hero-title {
+        margin: 0;
+
+        font-size: clamp(
+            2.3rem,
+            6vw,
+            4.5rem
+        );
+
+        line-height: 1.04;
+
+        font-weight: 800;
+
+        letter-spacing: -0.05em;
+
+        color: #0f172a;
+    }
+
+    .hero-title span {
+        color: #4f46e5;
+    }
+
+    .hero-subtitle {
+        max-width: 720px;
+
+        margin: 1.25rem auto 0 auto;
+
+        color: #64748b;
+
+        font-size: clamp(
+            0.95rem,
+            2vw,
+            1.12rem
+        );
+
+        line-height: 1.7;
+    }
+
+
+    /* =====================================================
+       CARDS
+    ===================================================== */
+
+    .glass-card {
+        background: rgba(
+            255,
+            255,
+            255,
+            0.82
+        );
+
+        border: 1px solid
+            rgba(
+                226,
+                232,
+                240,
+                0.95
+            );
+
+        border-radius: 22px;
+
+        padding: 1.4rem;
+
+        box-shadow:
+            0 10px 35px
+            rgba(
+                15,
+                23,
+                42,
+                0.06
+            );
+
+        backdrop-filter: blur(12px);
+
+        margin-bottom: 1rem;
+    }
+
+
+    /* =====================================================
+       SECTION TEXT
+    ===================================================== */
+
+    .section-title {
+        font-size: 1.1rem;
+
+        font-weight: 750;
+
+        color: #0f172a;
+
+        margin-bottom: 0.3rem;
+    }
+
+    .section-description {
+        color: #64748b;
+
+        font-size: 0.88rem;
+
+        line-height: 1.5;
+
+        margin-bottom: 0;
+    }
+
+
+    /* =====================================================
+       AGENT CARD
+    ===================================================== */
+
+    .agent-card {
+        display: flex;
+
+        align-items: center;
+
+        gap: 0.9rem;
+
+        padding: 0.9rem;
+
+        border-radius: 15px;
+
+        border: 1px solid #e2e8f0;
+
+        background: #ffffff;
+
+        margin-bottom: 0.7rem;
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .agent-card:hover {
+        transform: translateY(-1px);
+
+        box-shadow:
+            0 8px 20px
+            rgba(
+                15,
+                23,
+                42,
+                0.06
+            );
+    }
+
+    .agent-icon {
+        width: 42px;
+
+        height: 42px;
+
+        min-width: 42px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        border-radius: 12px;
+
+        background: #eef2ff;
+
+        font-size: 1.15rem;
+    }
+
+    .agent-name {
+        font-weight: 700;
+
+        color: #0f172a;
+
+        font-size: 0.92rem;
+    }
+
+    .agent-description {
+        color: #64748b;
+
+        font-size: 0.78rem;
+
+        line-height: 1.4;
+
+        margin-top: 0.15rem;
+    }
+
+
+    /* =====================================================
+       AGENT STATES
+    ===================================================== */
+
+    .working {
+        border-color: #818cf8;
+
+        background:
+            linear-gradient(
+                135deg,
+                #eef2ff,
+                #ffffff
+            );
+
+        box-shadow:
+            0 0 0 1px
+            rgba(
+                99,
+                102,
+                241,
+                0.08
+            ),
+            0 10px 25px
+            rgba(
+                99,
+                102,
+                241,
+                0.08
+            );
+    }
+
+    .completed {
+        border-color: #bbf7d0;
+
+        background:
+            linear-gradient(
+                135deg,
+                #f0fdf4,
+                #ffffff
+            );
+    }
+
+    .waiting {
+        opacity: 0.58;
+    }
+
+
+    /* =====================================================
+       CURRENT AGENT
+    ===================================================== */
+
+    .current-agent {
+        display: flex;
+
+        align-items: center;
+
+        gap: 0.8rem;
+
+        padding: 1rem 1.1rem;
+
+        border-radius: 16px;
+
+        border: 1px solid
+            rgba(
+                129,
+                140,
+                248,
+                0.35
+            );
+
+        background:
+            linear-gradient(
+                135deg,
+                #eef2ff,
+                #ffffff
+            );
+
+        margin-bottom: 1rem;
+    }
+
+    .current-agent-dot {
+        width: 11px;
+
+        height: 11px;
+
+        min-width: 11px;
+
+        border-radius: 50%;
+
+        background: #6366f1;
+
+        box-shadow:
+            0 0 0 5px
+            rgba(
+                99,
+                102,
+                241,
+                0.12
+            );
+    }
+
+    .current-agent-title {
+        color: #312e81;
+
+        font-size: 0.95rem;
+
+        font-weight: 750;
+    }
+
+    .current-agent-description {
+        color: #64748b;
+
+        font-size: 0.8rem;
+
+        margin-top: 0.2rem;
+    }
+
+
+    /* =====================================================
+       REPORT
+    ===================================================== */
+
+    .report-container {
+        background: #ffffff;
+
+        border: 1px solid #e2e8f0;
+
+        border-radius: 22px;
+
+        padding: clamp(
+            1.2rem,
+            4vw,
+            2.5rem
+        );
+
+        box-shadow:
+            0 15px 45px
+            rgba(
+                15,
+                23,
+                42,
+                0.06
+            );
+
+        line-height: 1.75;
+    }
+
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    .footer {
+        text-align: center;
+
+        color: #94a3b8;
+
+        font-size: 0.78rem;
+
+        padding-top: 2.5rem;
+    }
+
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media (max-width: 768px) {
 
         .block-container {
-            max-width: 1180px;
-            padding-top: 2rem;
-            padding-bottom: 4rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-top: 1rem;
         }
-
-
-        /* ==================================================
-           HERO
-        ================================================== */
 
         .hero {
-            padding: 2.5rem 1rem 2rem 1rem;
-            text-align: center;
-        }
-
-        .hero-badge {
-            display: inline-block;
-            padding: 0.45rem 0.85rem;
-            border-radius: 999px;
-
-            background: rgba(99, 102, 241, 0.10);
-            border: 1px solid rgba(99, 102, 241, 0.15);
-
-            color: #4f46e5;
-
-            font-size: 0.78rem;
-            font-weight: 700;
-
-            letter-spacing: 0.04em;
-
-            margin-bottom: 1rem;
+            padding:
+                1.5rem
+                0.5rem
+                1.5rem;
         }
 
         .hero-title {
-            margin: 0;
-
-            font-size: clamp(
-                2.3rem,
-                6vw,
-                4.5rem
-            );
-
-            line-height: 1.04;
-
-            font-weight: 800;
-
-            letter-spacing: -0.05em;
-
-            color: #0f172a;
-        }
-
-        .hero-title span {
-            color: #4f46e5;
+            font-size: 2.5rem;
         }
 
         .hero-subtitle {
-            max-width: 720px;
-
-            margin: 1.25rem auto 0 auto;
-
-            color: #64748b;
-
-            font-size: clamp(
-                0.95rem,
-                2vw,
-                1.12rem
-            );
-
-            line-height: 1.7;
+            font-size: 0.95rem;
         }
-
-
-        /* ==================================================
-           GLASS CARDS
-        ================================================== */
 
         .glass-card {
-            background: rgba(
-                255,
-                255,
-                255,
-                0.82
-            );
-
-            border: 1px solid
-                rgba(
-                    226,
-                    232,
-                    240,
-                    0.95
-                );
-
-            border-radius: 22px;
-
-            padding: 1.4rem;
-
-            box-shadow:
-                0 10px 35px
-                rgba(
-                    15,
-                    23,
-                    42,
-                    0.06
-                );
-
-            backdrop-filter: blur(12px);
-
-            margin-bottom: 1rem;
+            border-radius: 16px;
+            padding: 1rem;
         }
 
-
-        /* ==================================================
-           SECTION HEADINGS
-        ================================================== */
-
-        .section-title {
-            font-size: 1.1rem;
-
-            font-weight: 750;
-
-            color: #0f172a;
-
-            margin-bottom: 0.3rem;
+        .report-container {
+            border-radius: 16px;
+            padding: 1rem;
         }
-
-        .section-description {
-            color: #64748b;
-
-            font-size: 0.88rem;
-
-            line-height: 1.5;
-
-            margin-bottom: 1rem;
-        }
-
-
-        /* ==================================================
-           AGENT CARDS
-        ================================================== */
 
         .agent-card {
-            display: flex;
-
-            align-items: center;
-
-            gap: 0.9rem;
-
-            padding: 0.9rem;
-
-            border-radius: 15px;
-
-            border: 1px solid #e2e8f0;
-
-            background: #ffffff;
-
-            margin-bottom: 0.7rem;
-
-            transition:
-                transform 0.2s ease,
-                box-shadow 0.2s ease;
-        }
-
-        .agent-card:hover {
-            transform: translateY(-1px);
-
-            box-shadow:
-                0 8px 20px
-                rgba(
-                    15,
-                    23,
-                    42,
-                    0.06
-                );
+            padding: 0.75rem;
         }
 
         .agent-icon {
-            width: 42px;
-            height: 42px;
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+        }
+    }
 
-            min-width: 42px;
 
-            display: flex;
+    /* =====================================================
+       VERY SMALL SCREENS
+    ===================================================== */
 
-            align-items: center;
-            justify-content: center;
+    @media (max-width: 420px) {
 
-            border-radius: 12px;
-
-            background: #eef2ff;
-
-            font-size: 1.15rem;
+        .hero-title {
+            font-size: 2.15rem;
         }
 
-        .agent-name {
-            font-weight: 700;
-
-            color: #0f172a;
-
-            font-size: 0.92rem;
+        .hero-badge {
+            font-size: 0.7rem;
         }
 
-        .agent-description {
-            color: #64748b;
-
-            font-size: 0.78rem;
-
-            line-height: 1.4;
-
-            margin-top: 0.15rem;
+        .hero-subtitle {
+            font-size: 0.88rem;
         }
 
-
-        /* ==================================================
-           AGENT STATES
-        ================================================== */
-
-        .working {
-            border-color: #818cf8;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #eef2ff,
-                    #ffffff
-                );
-
-            box-shadow:
-                0 0 0 1px
-                rgba(
-                    99,
-                    102,
-                    241,
-                    0.08
-                ),
-                0 10px 25px
-                rgba(
-                    99,
-                    102,
-                    241,
-                    0.08
-                );
+        .section-title {
+            font-size: 1rem;
         }
+    }
 
-        .completed {
-            border-color: #bbf7d0;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #f0fdf4,
-                    #ffffff
-                );
-        }
-
-        .waiting {
-            opacity: 0.58;
-        }
-
-
-        /* ==================================================
-           CURRENT AGENT STATUS
-        ================================================== */
-
-        .current-agent {
-            display: flex;
-
-            align-items: center;
-
-            gap: 0.8rem;
-
-            padding: 1rem 1.1rem;
-
-            border-radius: 16px;
-
-            border: 1px solid
-                rgba(
-                    129,
-                    140,
-                    248,
-                    0.35
-                );
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #eef2ff,
-                    #ffffff
-                );
-
-            margin-bottom: 1rem;
-        }
-
-        .current-agent-dot {
-            width: 11px;
-            height: 11px;
-
-            min-width: 11px;
-
-            border-radius: 50%;
-
-            background: #6366f1;
-
-            box-shadow:
-                0 0 0 5px
-                rgba(
-                    99,
-                    102,
-                    241,
-                    0.12
-                );
-        }
-
-        .current-agent-title {
-            color: #312e81;
-
-            font-size: 0.95rem;
-
-            font-weight: 750;
-        }
-
-        .current-agent-description {
-            color: #64748b;
-
-            font-size: 0.8rem;
-
-            margin-top: 0.2rem;
-        }
-
-
-        /* ==================================================
-           REPORT
-        ================================================== */
-
-        .report-container {
-            background: #ffffff;
-
-            border: 1px solid #e2e8f0;
-
-            border-radius: 22px;
-
-            padding: clamp(
-                1.2rem,
-                4vw,
-                2.5rem
-            );
-
-            box-shadow:
-                0 15px 45px
-                rgba(
-                    15,
-                    23,
-                    42,
-                    0.06
-                );
-
-            line-height: 1.75;
-        }
-
-
-        /* ==================================================
-           FOOTER
-        ================================================== */
-
-        .footer {
-            text-align: center;
-
-            color: #94a3b8;
-
-            font-size: 0.78rem;
-
-            padding-top: 2.5rem;
-        }
-
-
-        /* ==================================================
-           STREAMLIT INPUT
-        ================================================== */
-
-        textarea {
-            border-radius: 14px !important;
-        }
-
-
-        /* ==================================================
-           MOBILE
-        ================================================== */
-
-        @media (max-width: 768px) {
-
-            .block-container {
-                padding-left: 1rem;
-                padding-right: 1rem;
-                padding-top: 1rem;
-            }
-
-            .hero {
-                padding:
-                    1.5rem
-                    0.5rem
-                    1.5rem;
-            }
-
-            .hero-title {
-                font-size: 2.5rem;
-            }
-
-            .hero-subtitle {
-                font-size: 0.95rem;
-            }
-
-            .glass-card {
-                border-radius: 16px;
-                padding: 1rem;
-            }
-
-            .report-container {
-                border-radius: 16px;
-                padding: 1rem;
-            }
-
-            .agent-card {
-                padding: 0.75rem;
-            }
-
-            .agent-icon {
-                width: 38px;
-                height: 38px;
-                min-width: 38px;
-            }
-        }
-
-
-        /* ==================================================
-           VERY SMALL SCREENS
-        ================================================== */
-
-        @media (max-width: 420px) {
-
-            .hero-title {
-                font-size: 2.15rem;
-            }
-
-            .hero-badge {
-                font-size: 0.7rem;
-            }
-
-            .hero-subtitle {
-                font-size: 0.88rem;
-            }
-
-            .section-title {
-                font-size: 1rem;
-            }
-        }
-
-        </style>
-        """
-    ),
-    unsafe_allow_html=True,
+    </style>
+    """
 )
 
 
@@ -513,35 +508,32 @@ st.markdown(
 # HERO
 # ============================================================
 
-st.markdown(
-    dedent(
-        """
-        <div class="hero">
+st.html(
+    """
+    <div class="hero">
 
-            <div class="hero-badge">
-                ✦ MULTI-AGENT RESEARCH SYSTEM
-            </div>
-
-            <h1 class="hero-title">
-                Research smarter with<br>
-                <span>AI teammates.</span>
-            </h1>
-
-            <p class="hero-subtitle">
-                A CrewAI-powered research team that plans your question,
-                searches for evidence, checks the findings, and writes
-                a structured research report.
-            </p>
-
+        <div class="hero-badge">
+            ✦ MULTI-AGENT RESEARCH SYSTEM
         </div>
-        """
-    ),
-    unsafe_allow_html=True,
+
+        <h1 class="hero-title">
+            Research smarter with<br>
+            <span>AI teammates.</span>
+        </h1>
+
+        <p class="hero-subtitle">
+            A CrewAI-powered research team that plans your question,
+            searches for evidence, checks the findings, and writes
+            a structured research report.
+        </p>
+
+    </div>
+    """
 )
 
 
 # ============================================================
-# MAIN INPUT + TEAM SECTION
+# MAIN LAYOUT
 # ============================================================
 
 left_column, right_column = st.columns(
@@ -556,24 +548,21 @@ left_column, right_column = st.columns(
 
 with left_column:
 
-    st.markdown(
-        dedent(
-            """
-            <div class="glass-card">
+    st.html(
+        """
+        <div class="glass-card">
 
-                <div class="section-title">
-                    What do you want to research?
-                </div>
-
-                <div class="section-description">
-                    Ask a focused question. Your AI research team
-                    will investigate it step by step.
-                </div>
-
+            <div class="section-title">
+                What do you want to research?
             </div>
-            """
-        ),
-        unsafe_allow_html=True,
+
+            <div class="section-description">
+                Ask a focused question. Your AI research team
+                will investigate it step by step.
+            </div>
+
+        </div>
+        """
     )
 
     topic = st.text_area(
@@ -594,57 +583,51 @@ with left_column:
 
 
 # ============================================================
-# RIGHT — TEAM
+# RIGHT — RESEARCH TEAM
 # ============================================================
 
 with right_column:
 
-    st.markdown(
-        dedent(
-            """
-            <div class="glass-card">
+    st.html(
+        """
+        <div class="glass-card">
 
-                <div class="section-title">
-                    Your research team
-                </div>
-
-                <div class="section-description">
-                    Four specialized agents work sequentially.
-                </div>
-
+            <div class="section-title">
+                Your research team
             </div>
-            """
-        ),
-        unsafe_allow_html=True,
+
+            <div class="section-description">
+                Four specialized agents work sequentially.
+            </div>
+
+        </div>
+        """
     )
 
     for agent in AGENT_ORDER:
 
-        st.markdown(
-            dedent(
-                f"""
-                <div class="agent-card">
+        st.html(
+            f"""
+            <div class="agent-card">
 
-                    <div class="agent-icon">
-                        {agent["icon"]}
+                <div class="agent-icon">
+                    {agent["icon"]}
+                </div>
+
+                <div>
+
+                    <div class="agent-name">
+                        {agent["name"]}
                     </div>
 
-                    <div>
-
-                        <div class="agent-name">
-                            {agent["name"]}
-                        </div>
-
-                        <div class="agent-description">
-                            {agent["description"]}
-                        </div>
-
+                    <div class="agent-description">
+                        {agent["description"]}
                     </div>
 
                 </div>
-                """
-            ),
-            unsafe_allow_html=True,
+
+            </div>
+            """
         )
 
 
@@ -668,7 +651,7 @@ if start_research:
 
 
     # --------------------------------------------------------
-    # VALIDATE GROQ KEY
+    # VALIDATE GROQ
     # --------------------------------------------------------
 
     if not os.getenv("GROQ_API_KEY"):
@@ -682,7 +665,7 @@ if start_research:
 
 
     # --------------------------------------------------------
-    # VALIDATE SERPER KEY
+    # VALIDATE SERPER
     # --------------------------------------------------------
 
     if not os.getenv("SERPER_API_KEY"):
@@ -695,26 +678,22 @@ if start_research:
         st.stop()
 
 
-    # --------------------------------------------------------
-    # RESEARCH PROGRESS
-    # --------------------------------------------------------
+    # ========================================================
+    # PROGRESS UI
+    # ========================================================
 
     st.divider()
 
-    st.subheader("Research progress")
+    st.subheader(
+        "Research progress"
+    )
 
-
-    # Current agent message
 
     current_status = st.empty()
 
 
-    # Progress bar
-
     progress_bar = st.progress(0)
 
-
-    # Agent status placeholders
 
     status_cards = []
 
@@ -726,26 +705,19 @@ if start_research:
 
 
     # ========================================================
-    # STATUS UPDATE FUNCTION
+    # STATUS CALLBACK
     # ========================================================
 
     def update_status(
         completed_agent,
         next_agent,
     ):
-        """
-        Update the Streamlit UI after each CrewAI task.
-        """
 
         completed_lower = (
-            completed_agent
+            str(completed_agent)
             .lower()
         )
 
-
-        # ----------------------------------------------------
-        # Determine completed agent
-        # ----------------------------------------------------
 
         if "planner" in completed_lower:
 
@@ -769,7 +741,7 @@ if start_research:
 
 
         # ----------------------------------------------------
-        # Mark completed agent
+        # COMPLETED
         # ----------------------------------------------------
 
         completed_data = (
@@ -781,36 +753,34 @@ if start_research:
         status_cards[
             completed_index
         ].markdown(
-            dedent(
-                f"""
-                <div class="agent-card completed">
+            f"""
+            <div class="agent-card completed">
 
-                    <div class="agent-icon">
-                        ✓
+                <div class="agent-icon">
+                    ✓
+                </div>
+
+                <div>
+
+                    <div class="agent-name">
+                        {completed_data["name"]}
+                        — Completed
                     </div>
 
-                    <div>
-
-                        <div class="agent-name">
-                            {completed_data["name"]}
-                            — Completed
-                        </div>
-
-                        <div class="agent-description">
-                            {completed_data["description"]}
-                        </div>
-
+                    <div class="agent-description">
+                        {completed_data["description"]}
                     </div>
 
                 </div>
-                """
-            ),
+
+            </div>
+            """,
             unsafe_allow_html=True,
         )
 
 
         # ----------------------------------------------------
-        # Activate next agent
+        # NEXT AGENT
         # ----------------------------------------------------
 
         if next_index < len(AGENT_ORDER):
@@ -823,30 +793,28 @@ if start_research:
 
 
             current_status.markdown(
-                dedent(
-                    f"""
-                    <div class="current-agent">
+                f"""
+                <div class="current-agent">
 
-                        <div class="current-agent-dot">
+                    <div class="current-agent-dot">
+                    </div>
+
+                    <div>
+
+                        <div class="current-agent-title">
+                            {next_data["icon"]}
+                            Currently working:
+                            {next_data["name"]}
                         </div>
 
-                        <div>
-
-                            <div class="current-agent-title">
-                                {next_data["icon"]}
-                                Currently working:
-                                {next_data["name"]}
-                            </div>
-
-                            <div class="current-agent-description">
-                                {next_data["description"]}
-                            </div>
-
+                        <div class="current-agent-description">
+                            {next_data["description"]}
                         </div>
 
                     </div>
-                    """
-                ),
+
+                </div>
+                """,
                 unsafe_allow_html=True,
             )
 
@@ -854,35 +822,31 @@ if start_research:
             status_cards[
                 next_index
             ].markdown(
-                dedent(
-                    f"""
-                    <div class="agent-card working">
+                f"""
+                <div class="agent-card working">
 
-                        <div class="agent-icon">
-                            {next_data["icon"]}
+                    <div class="agent-icon">
+                        {next_data["icon"]}
+                    </div>
+
+                    <div>
+
+                        <div class="agent-name">
+                            {next_data["name"]}
+                            — Working
                         </div>
 
-                        <div>
-
-                            <div class="agent-name">
-                                {next_data["name"]}
-                                — Working
-                            </div>
-
-                            <div class="agent-description">
-                                {next_data["description"]}
-                            </div>
-
+                        <div class="agent-description">
+                            {next_data["description"]}
                         </div>
 
                     </div>
-                    """
-                ),
+
+                </div>
+                """,
                 unsafe_allow_html=True,
             )
 
-
-            # Update progress
 
             progress_bar.progress(
                 int(
@@ -901,70 +865,62 @@ if start_research:
 
 
     current_status.markdown(
-        dedent(
-            f"""
-            <div class="current-agent">
+        f"""
+        <div class="current-agent">
 
-                <div class="current-agent-dot">
+            <div class="current-agent-dot">
+            </div>
+
+            <div>
+
+                <div class="current-agent-title">
+                    {first_agent["icon"]}
+                    Currently working:
+                    {first_agent["name"]}
                 </div>
 
-                <div>
-
-                    <div class="current-agent-title">
-                        {first_agent["icon"]}
-                        Currently working:
-                        {first_agent["name"]}
-                    </div>
-
-                    <div class="current-agent-description">
-                        {first_agent["description"]}
-                    </div>
-
+                <div class="current-agent-description">
+                    {first_agent["description"]}
                 </div>
 
             </div>
-            """
-        ),
+
+        </div>
+        """,
         unsafe_allow_html=True,
     )
 
 
-    # --------------------------------------------------------
-    # INITIAL AGENT CARD
-    # --------------------------------------------------------
+    # First agent
 
     status_cards[0].markdown(
-        dedent(
-            f"""
-            <div class="agent-card working">
+        f"""
+        <div class="agent-card working">
 
-                <div class="agent-icon">
-                    {first_agent["icon"]}
+            <div class="agent-icon">
+                {first_agent["icon"]}
+            </div>
+
+            <div>
+
+                <div class="agent-name">
+                    {first_agent["name"]}
+                    — Working
                 </div>
 
-                <div>
-
-                    <div class="agent-name">
-                        {first_agent["name"]}
-                        — Working
-                    </div>
-
-                    <div class="agent-description">
-                        {first_agent["description"]}
-                    </div>
-
+                <div class="agent-description">
+                    {first_agent["description"]}
                 </div>
 
             </div>
-            """
-        ),
+
+        </div>
+        """,
         unsafe_allow_html=True,
     )
 
 
-    # --------------------------------------------------------
-    # WAITING AGENTS
-    # --------------------------------------------------------
+    # Waiting agents
 
     for index in range(
         1,
@@ -974,29 +930,27 @@ if start_research:
         agent = AGENT_ORDER[index]
 
         status_cards[index].markdown(
-            dedent(
-                f"""
-                <div class="agent-card waiting">
+            f"""
+            <div class="agent-card waiting">
 
-                    <div class="agent-icon">
-                        {agent["icon"]}
+                <div class="agent-icon">
+                    {agent["icon"]}
+                </div>
+
+                <div>
+
+                    <div class="agent-name">
+                        {agent["name"]}
                     </div>
 
-                    <div>
-
-                        <div class="agent-name">
-                            {agent["name"]}
-                        </div>
-
-                        <div class="agent-description">
-                            Waiting for previous agent.
-                        </div>
-
+                    <div class="agent-description">
+                        Waiting for previous agent.
                     </div>
 
                 </div>
-                """
-            ),
+
+            </div>
+            """,
             unsafe_allow_html=True,
         )
 
@@ -1025,7 +979,6 @@ if start_research:
 
         progress_bar.progress(100)
 
-
         current_status.success(
             "✅ All research agents completed."
         )
@@ -1039,16 +992,13 @@ if start_research:
 
 
         # ----------------------------------------------------
-        # REPORT
+        # REPORT CONTAINER
         # ----------------------------------------------------
 
-        st.markdown(
-            dedent(
-                """
-                <div class="report-container">
-                """
-            ),
-            unsafe_allow_html=True,
+        st.html(
+            """
+            <div class="report-container">
+            """
         )
 
 
@@ -1068,14 +1018,15 @@ if start_research:
             )
 
 
-        st.markdown(
-            "</div>",
-            unsafe_allow_html=True,
+        st.html(
+            """
+            </div>
+            """
         )
 
 
     # ========================================================
-    # ERROR HANDLING
+    # ERROR
     # ========================================================
 
     except Exception as error:
@@ -1093,14 +1044,11 @@ if start_research:
 # FOOTER
 # ============================================================
 
-st.markdown(
-    dedent(
-        """
-        <div class="footer">
-            ResearchFlow AI · CrewAI + Groq
-            · Evidence-driven multi-agent research
-        </div>
-        """
-    ),
-    unsafe_allow_html=True,
+st.html(
+    """
+    <div class="footer">
+        ResearchFlow AI · CrewAI + Groq
+        · Evidence-driven multi-agent research
+    </div>
+    """
 )
