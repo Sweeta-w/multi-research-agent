@@ -33,11 +33,8 @@ AGENT_ORDER = [
 def build_crew(status_callback=None):
 
     planner = create_planner()
-
     researcher = create_researcher()
-
     fact_checker = create_fact_checker()
-
     writer = create_writer()
 
     # -----------------------------------
@@ -50,7 +47,7 @@ def build_crew(status_callback=None):
 
         {topic}
 
-        Create a focused research plan.
+        Create a focused and concise research plan.
 
         Identify:
 
@@ -59,6 +56,8 @@ def build_crew(status_callback=None):
         3. Specific questions that need answers.
         4. Useful search keywords.
         5. Types of evidence that should be collected.
+
+        Keep the plan focused so unnecessary searches are avoided.
 
         Do not write the final report.
         """,
@@ -88,7 +87,8 @@ def build_crew(status_callback=None):
 
         {topic}
 
-        Search for reliable evidence.
+        Use the available web search tool to find reliable
+        and relevant evidence.
 
         Prioritize:
 
@@ -99,27 +99,68 @@ def build_crew(status_callback=None):
         - Reputable reports
         - Recent information
 
-        For important findings, record:
+        Focus on useful evidence rather than collecting a large
+        number of repetitive sources.
+
+        For every important finding, record:
 
         - Claim
-        - Evidence
+        - Evidence or search-result snippet
         - Source title
-        - Source URL
+        - Exact source URL returned by the web search tool
         - Publication date if available
+        - Source type if it can be determined from the search result
 
-        Do not invent sources.
-        Do not invent URLs.
+        IMPORTANT SOURCE RULES:
+
+        - Preserve the exact source URL returned by the web search tool.
+        - Never invent or modify a URL.
+        - Never invent a source title.
+        - Treat search-result summaries as snippets, not as the full
+          content of an article, report, or research paper.
+        - Do not claim that a full source was reviewed when only a
+          search-result snippet was available.
+        - If a date or other source detail is unavailable, say
+          "Not available" instead of guessing.
+        - Keep source information attached to the claim it supports.
+        - Do not invent evidence.
         """,
 
         expected_output="""
-        A research evidence collection containing:
+        A concise research evidence collection.
+
+        For important findings use this format:
+
+        CLAIM:
+        The important factual claim.
+
+        EVIDENCE:
+        The evidence or search-result snippet supporting the claim.
+
+        SOURCE TITLE:
+        The exact source title returned by web search.
+
+        SOURCE URL:
+        The exact source URL returned by web search.
+
+        DATE:
+        Publication date if available, otherwise "Not available".
+
+        SOURCE TYPE:
+        Government, academic, official organization, research
+        institution, reputable report, news, or other when identifiable.
+
+        Include:
 
         - Important findings
         - Supporting evidence
         - Source titles
         - Source URLs
         - Dates where available
-        - Conflicting evidence
+        - Conflicting evidence where found
+
+        Do not create source information that was not returned
+        by the web search tool.
         """,
 
         agent=researcher,
@@ -133,29 +174,78 @@ def build_crew(status_callback=None):
 
     fact_check_task = Task(
         description="""
-        Review the research collected by the previous agent.
+        Review the research evidence collected by the previous agent.
 
-        For important claims:
+        Evaluate the evidence that was actually provided.
 
-        1. Determine whether the claim is supported.
-        2. Check whether the source is relevant.
+        For each important claim:
+
+        1. Determine whether the provided evidence supports the claim.
+        2. Check whether the provided source is relevant to the claim.
         3. Identify weak or unsupported claims.
-        4. Identify contradictions.
-        5. Separate facts from interpretations.
-        6. Flag potentially outdated information.
+        4. Identify contradictions in the collected evidence.
+        5. Separate factual evidence from interpretation.
+        6. Flag potentially outdated information when this can be
+           determined from the provided evidence.
+        7. Preserve the source title and source URL associated with
+           each evaluated claim.
+
+        Classify important claims as:
+
+        - SUPPORTED
+        - WEAK
+        - CONTRADICTED
+        - UNVERIFIED
+
+        IMPORTANT:
+
+        You are evaluating the evidence supplied by the researcher.
+
+        Do not pretend that you independently opened or read a source
+        when only a search-result snippet was provided.
+
+        Do not use your own memory as evidence.
 
         Do not invent missing evidence.
+
+        Do not invent citations, source titles, publication dates,
+        authors, or URLs.
+
+        If the available evidence is insufficient, classify the claim
+        as WEAK or UNVERIFIED rather than guessing.
         """,
 
         expected_output="""
-        A verified evidence summary containing:
+        A concise verified evidence summary.
 
-        - Supported claims
-        - Evidence
-        - Source information
-        - Unsupported claims
+        For each major claim include:
+
+        CLAIM:
+        The claim being evaluated.
+
+        STATUS:
+        SUPPORTED / WEAK / CONTRADICTED / UNVERIFIED
+
+        EVIDENCE:
+        The evidence that was actually provided.
+
+        SOURCE TITLE:
+        Original source title if provided.
+
+        SOURCE URL:
+        Original source URL if provided.
+
+        REASON:
+        A short explanation of the verification decision.
+
+        Also identify:
+
         - Conflicting evidence
-        - Limitations
+        - Important limitations
+        - Missing evidence
+
+        Preserve source information from the research task.
+        Do not create new source information.
         """,
 
         agent=fact_checker,
@@ -173,7 +263,13 @@ def build_crew(status_callback=None):
 
         {topic}
 
-        Use ONLY the fact-checked evidence from the previous task.
+        You have access to:
+
+        1. The original research evidence and source information.
+        2. The fact checker's evaluation of that evidence.
+
+        Use the fact checker's decisions when deciding which claims
+        are reliable enough to include.
 
         Use this structure:
 
@@ -195,18 +291,37 @@ def build_crew(status_callback=None):
 
         ## Sources
 
-        Rules:
+        RULES:
 
-        - Do not invent facts.
-        - Do not invent citations.
-        - Do not invent URLs.
+        - Use only evidence supplied by the research process.
+        - Give preference to claims classified as SUPPORTED.
+        - Clearly identify uncertainty around WEAK or UNVERIFIED claims.
+        - Do not present CONTRADICTED claims as established facts.
         - Clearly distinguish evidence from interpretation.
         - Mention uncertainty when evidence is limited.
-        - Use the provided sources.
+
+        SOURCE AND CITATION RULES:
+
+        - Use only source titles and URLs that appear in the original
+          research evidence.
+        - Never invent a source.
+        - Never invent a URL.
+        - Never invent an author or publication date.
+        - Never create citation markers or line references that were
+          not supplied by the research evidence.
+        - Do not generate citation formats such as [1], (1), or
+          line-reference markers unless they correspond to actual
+          provided source information.
+        - If a claim cannot be traced to provided evidence, either
+          clearly label it as unverified or omit it.
+        - In the Sources section, list the actual source title together
+          with its provided URL.
+        - Do not claim to have read a complete webpage, paper, or report
+          when the available evidence came only from a search snippet.
         """,
 
         expected_output="""
-        A complete Markdown research report with:
+        A complete Markdown research report containing:
 
         - Executive Summary
         - Introduction
@@ -215,12 +330,24 @@ def build_crew(status_callback=None):
         - Different Perspectives
         - Limitations
         - Conclusion
-        - Sources with URLs
+        - Sources
+
+        Every important factual claim should be traceable to source
+        information contained in the original research evidence.
+
+        The Sources section must contain only source titles and URLs
+        actually supplied by the research task.
         """,
 
         agent=writer,
 
-        context=[fact_check_task],
+        # IMPORTANT:
+        # Writer receives both the original evidence and the
+        # fact-checker's evaluation.
+        context=[
+            research_task,
+            fact_check_task,
+        ],
     )
 
     # -----------------------------------
