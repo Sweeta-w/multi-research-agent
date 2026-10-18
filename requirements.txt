@@ -2,3 +2,6 @@ streamlit
 crewai[litellm]
 groq
 requests
+deep-translator
+python-docx
+reportlab
