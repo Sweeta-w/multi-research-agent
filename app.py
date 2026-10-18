@@ -11,12 +11,12 @@ from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
 from crew.research_crew import AGENT_ORDER, build_crew
 
 # ============================================================
-# HELPER FUNCTIONS FOR FILE GENERATION & TRANSLATION
+# HELPER FUNCTIONS FOR TRANSLATION & EXPORTS
 # ============================================================
 
 
 def translate_text(text: str, target_lang: str) -> str:
-    """Translates text to English, Urdu, Hindi, or Sindhi."""
+    """Translates research report text to Urdu, Hindi, or Sindhi."""
     lang_codes = {
         "Urdu": "ur",
         "Hindi": "hi",
@@ -25,22 +25,21 @@ def translate_text(text: str, target_lang: str) -> str:
     if target_lang in lang_codes:
         try:
             translator = GoogleTranslator(
-                source="auto", target=lang_codes[target_lang]
+                source="en", target=lang_codes[target_lang]
             )
-            # Chunking text if it exceeds single API query length limit
-            chunks = [text[i : i + 4500] for i in range(0, len(text), 4500)]
+            chunks = [text[i : i + 4000] for i in range(0, len(text), 4000)]
             translated_chunks = [translator.translate(chunk) for chunk in chunks]
-            return "\n".join(translated_chunks)
+            return "\n\n".join(translated_chunks)
         except Exception as e:
             st.error(f"Translation Error: {e}")
             return text
     return text
 
 
-def create_docx(text: str) -> io.BytesIO:
+def create_docx(text: str, title: str = "Research Report") -> io.BytesIO:
     """Generates a Word document in memory."""
     doc = Document()
-    doc.add_heading("Research Report", level=1)
+    doc.add_heading(title, level=1)
     for paragraph in text.split("\n"):
         if paragraph.strip():
             doc.add_paragraph(paragraph)
@@ -50,7 +49,7 @@ def create_docx(text: str) -> io.BytesIO:
     return bio
 
 
-def create_pdf(text: str) -> io.BytesIO:
+def create_pdf(text: str, title: str = "Research Report") -> io.BytesIO:
     """Generates a PDF document in memory."""
     bio = io.BytesIO()
     pdf = SimpleDocTemplate(bio, pagesize=letter)
@@ -59,7 +58,7 @@ def create_pdf(text: str) -> io.BytesIO:
     normal_style.leading = 14
 
     story = [
-        Paragraph("<b>Research Report</b>", styles["Title"]),
+        Paragraph(f"<b>{title}</b>", styles["Title"]),
         Spacer(1, 12),
     ]
     for line in text.split("\n"):
@@ -473,14 +472,8 @@ with left_column:
     topic = st.text_area(
         "Research question",
         placeholder="Example: How is generative AI changing software development?",
-        height=130,
+        height=150,
         label_visibility="collapsed",
-    )
-
-    selected_language = st.selectbox(
-        "Select Report Language",
-        options=["English", "Urdu", "Hindi", "Sindhi"],
-        index=0,
     )
 
     start_research = st.button(
@@ -537,6 +530,14 @@ if start_research:
     if not os.getenv("SERPER_API_KEY"):
         st.error("SERPER_API_KEY is missing. Add it in Streamlit Secrets.")
         st.stop()
+
+    # Reset previous report states
+    if "english_report" in st.session_state:
+        del st.session_state["english_report"]
+    if "current_report" in st.session_state:
+        del st.session_state["current_report"]
+    if "current_lang" in st.session_state:
+        del st.session_state["current_lang"]
 
     # ========================================================
     # PROGRESS UI
@@ -679,19 +680,12 @@ if start_research:
 
         current_status.success("✅ All research agents completed.")
 
-        st.divider()
-
         raw_report = result.raw if hasattr(result, "raw") else str(result)
 
-        # Apply Translation if non-English option selected
-        if selected_language != "English":
-            with st.spinner(f"Translating report to {selected_language}..."):
-                final_report = translate_text(raw_report, selected_language)
-        else:
-            final_report = raw_report
-
-        # Save report text in session state for export controls
-        st.session_state["final_report"] = final_report
+        # Store initial English report in session
+        st.session_state["english_report"] = raw_report
+        st.session_state["current_report"] = raw_report
+        st.session_state["current_lang"] = "English"
 
     except Exception as error:
 
@@ -700,39 +694,76 @@ if start_research:
 
 
 # ============================================================
-# REPORT DISPLAY & EXPORT OPTIONS
+# REPORT DISPLAY, TRANSLATION & EXPORTS
 # ============================================================
 
-if "final_report" in st.session_state:
+if "english_report" in st.session_state:
 
+    st.divider()
     st.subheader("Research Report")
 
-    # Export Action Buttons
+    # Translation & Controls Block
+    with st.expander("🌐 Translate Report & Download Settings", expanded=True):
+        col_lang, col_btn = st.columns([2, 1])
+
+        with col_lang:
+            target_lang = st.selectbox(
+                "Convert Report Language:",
+                options=["English", "Urdu", "Hindi", "Sindhi"],
+                index=["English", "Urdu", "Hindi", "Sindhi"].index(
+                    st.session_state.get("current_lang", "English")
+                ),
+            )
+
+        with col_btn:
+            st.write(" ")
+            st.write(" ")
+            if st.button("Translate Report", use_container_width=True):
+                if target_lang == "English":
+                    st.session_state["current_report"] = st.session_state["english_report"]
+                    st.session_state["current_lang"] = "English"
+                else:
+                    with st.spinner(f"Translating report into {target_lang}..."):
+                        translated = translate_text(
+                            st.session_state["english_report"], target_lang
+                        )
+                        st.session_state["current_report"] = translated
+                        st.session_state["current_lang"] = target_lang
+                st.rerun()
+
+    # Download Buttons (Uses currently active translated/original report)
     col_dl1, col_dl2, _ = st.columns([1, 1, 2])
+    lang_tag = st.session_state.get("current_lang", "English")
 
     with col_dl1:
-        doc_file = create_docx(st.session_state["final_report"])
+        doc_file = create_docx(
+            st.session_state["current_report"],
+            title=f"Research Report ({lang_tag})",
+        )
         st.download_button(
-            label="📄 Download Word (.docx)",
+            label=f"📄 Download Word ({lang_tag})",
             data=doc_file,
-            file_name="Research_Report.docx",
+            file_name=f"Research_Report_{lang_tag}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             use_container_width=True,
         )
 
     with col_dl2:
-        pdf_file = create_pdf(st.session_state["final_report"])
+        pdf_file = create_pdf(
+            st.session_state["current_report"],
+            title=f"Research Report ({lang_tag})",
+        )
         st.download_button(
-            label="📕 Download PDF (.pdf)",
+            label=f"📕 Download PDF ({lang_tag})",
             data=pdf_file,
-            file_name="Research_Report.pdf",
+            file_name=f"Research_Report_{lang_tag}.pdf",
             mime="application/pdf",
             use_container_width=True,
         )
 
-    # Display Report
+    # Display Active Report
     st.markdown(
-        f'<div class="report-container">\n\n{st.session_state["final_report"]}\n\n</div>',
+        f'<div class="report-container">\n\n{st.session_state["current_report"]}\n\n</div>',
         unsafe_allow_html=True,
     )
 
