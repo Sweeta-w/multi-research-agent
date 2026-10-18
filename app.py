@@ -27,7 +27,7 @@ st.html(
     <style>
 
     /* =====================================================
-       GLOBAL
+       GLOBAL & TEXT FIXES
     ===================================================== */
 
     .stApp {
@@ -43,6 +43,12 @@ st.html(
                 transparent 30%
             ),
             #f8fafc;
+        color: #0f172a !important;
+    }
+
+    /* Force visibility on default text elements */
+    .stApp p, .stApp span, .stApp label, .stApp h1, .stApp h2, .stApp h3 {
+        color: #0f172a;
     }
 
     .block-container {
@@ -63,61 +69,43 @@ st.html(
 
     .hero-badge {
         display: inline-block;
-
         padding: 0.45rem 0.85rem;
-
         border-radius: 999px;
-
         background: rgba(99, 102, 241, 0.10);
-
         border: 1px solid rgba(99, 102, 241, 0.15);
-
-        color: #4f46e5;
-
+        color: #4f46e5 !important;
         font-size: 0.78rem;
-
         font-weight: 700;
-
         letter-spacing: 0.04em;
-
         margin-bottom: 1rem;
     }
 
     .hero-title {
         margin: 0;
-
         font-size: clamp(
             2.3rem,
             6vw,
             4.5rem
         );
-
         line-height: 1.04;
-
         font-weight: 800;
-
         letter-spacing: -0.05em;
-
-        color: #0f172a;
+        color: #0f172a !important;
     }
 
     .hero-title span {
-        color: #4f46e5;
+        color: #4f46e5 !important;
     }
 
     .hero-subtitle {
         max-width: 720px;
-
         margin: 1.25rem auto 0 auto;
-
-        color: #64748b;
-
+        color: #64748b !important;
         font-size: clamp(
             0.95rem,
             2vw,
             1.12rem
         );
-
         line-height: 1.7;
     }
 
@@ -133,7 +121,6 @@ st.html(
             255,
             0.82
         );
-
         border: 1px solid
             rgba(
                 226,
@@ -141,11 +128,8 @@ st.html(
                 240,
                 0.95
             );
-
         border-radius: 22px;
-
         padding: 1.4rem;
-
         box-shadow:
             0 10px 35px
             rgba(
@@ -154,9 +138,7 @@ st.html(
                 42,
                 0.06
             );
-
         backdrop-filter: blur(12px);
-
         margin-bottom: 1rem;
     }
 
@@ -167,21 +149,15 @@ st.html(
 
     .section-title {
         font-size: 1.1rem;
-
         font-weight: 750;
-
-        color: #0f172a;
-
+        color: #0f172a !important;
         margin-bottom: 0.3rem;
     }
 
     .section-description {
-        color: #64748b;
-
+        color: #64748b !important;
         font-size: 0.88rem;
-
         line-height: 1.5;
-
         margin-bottom: 0;
     }
 
@@ -192,21 +168,13 @@ st.html(
 
     .agent-card {
         display: flex;
-
         align-items: center;
-
         gap: 0.9rem;
-
         padding: 0.9rem;
-
         border-radius: 15px;
-
         border: 1px solid #e2e8f0;
-
         background: #ffffff;
-
         margin-bottom: 0.7rem;
-
         transition:
             transform 0.2s ease,
             box-shadow 0.2s ease;
@@ -214,7 +182,6 @@ st.html(
 
     .agent-card:hover {
         transform: translateY(-1px);
-
         box-shadow:
             0 8px 20px
             rgba(
@@ -227,39 +194,27 @@ st.html(
 
     .agent-icon {
         width: 42px;
-
         height: 42px;
-
         min-width: 42px;
-
         display: flex;
-
         align-items: center;
-
         justify-content: center;
-
         border-radius: 12px;
-
         background: #eef2ff;
-
         font-size: 1.15rem;
+        color: #4f46e5;
     }
 
     .agent-name {
         font-weight: 700;
-
-        color: #0f172a;
-
+        color: #0f172a !important;
         font-size: 0.92rem;
     }
 
     .agent-description {
-        color: #64748b;
-
+        color: #64748b !important;
         font-size: 0.78rem;
-
         line-height: 1.4;
-
         margin-top: 0.15rem;
     }
 
@@ -270,14 +225,12 @@ st.html(
 
     .working {
         border-color: #818cf8;
-
         background:
             linear-gradient(
                 135deg,
                 #eef2ff,
                 #ffffff
             );
-
         box-shadow:
             0 0 0 1px
             rgba(
@@ -297,7 +250,6 @@ st.html(
 
     .completed {
         border-color: #bbf7d0;
-
         background:
             linear-gradient(
                 135deg,
@@ -317,15 +269,10 @@ st.html(
 
     .current-agent {
         display: flex;
-
         align-items: center;
-
         gap: 0.8rem;
-
         padding: 1rem 1.1rem;
-
         border-radius: 16px;
-
         border: 1px solid
             rgba(
                 129,
@@ -333,28 +280,21 @@ st.html(
                 248,
                 0.35
             );
-
         background:
             linear-gradient(
                 135deg,
                 #eef2ff,
                 #ffffff
             );
-
         margin-bottom: 1rem;
     }
 
     .current-agent-dot {
         width: 11px;
-
         height: 11px;
-
         min-width: 11px;
-
         border-radius: 50%;
-
         background: #6366f1;
-
         box-shadow:
             0 0 0 5px
             rgba(
@@ -366,39 +306,31 @@ st.html(
     }
 
     .current-agent-title {
-        color: #312e81;
-
+        color: #312e81 !important;
         font-size: 0.95rem;
-
         font-weight: 750;
     }
 
     .current-agent-description {
-        color: #64748b;
-
+        color: #64748b !important;
         font-size: 0.8rem;
-
         margin-top: 0.2rem;
     }
 
 
     /* =====================================================
-       REPORT
+       REPORT & MARKDOWN FIXES
     ===================================================== */
 
     .report-container {
         background: #ffffff;
-
         border: 1px solid #e2e8f0;
-
         border-radius: 22px;
-
         padding: clamp(
             1.2rem,
             4vw,
             2.5rem
         );
-
         box-shadow:
             0 15px 45px
             rgba(
@@ -407,8 +339,41 @@ st.html(
                 42,
                 0.06
             );
-
         line-height: 1.75;
+        color: #0f172a !important;
+        margin-top: 1rem;
+    }
+
+    .report-container p, 
+    .report-container li, 
+    .report-container td, 
+    .report-container th, 
+    .report-container span {
+        color: #334155 !important;
+    }
+
+    .report-container h1, 
+    .report-container h2, 
+    .report-container h3, 
+    .report-container h4 {
+        color: #0f172a !important;
+        font-weight: 750;
+    }
+
+    .report-container table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+    }
+
+    .report-container th, .report-container td {
+        border: 1px solid #e2e8f0;
+        padding: 0.75rem;
+        text-align: left;
+    }
+
+    .report-container th {
+        background-color: #f8fafc;
     }
 
 
@@ -418,21 +383,17 @@ st.html(
 
     .footer {
         text-align: center;
-
-        color: #94a3b8;
-
+        color: #94a3b8 !important;
         font-size: 0.78rem;
-
         padding-top: 2.5rem;
     }
 
 
     /* =====================================================
-       MOBILE
+       MOBILE & RESPONSIVE
     ===================================================== */
 
     @media (max-width: 768px) {
-
         .block-container {
             padding-left: 1rem;
             padding-right: 1rem;
@@ -475,13 +436,7 @@ st.html(
         }
     }
 
-
-    /* =====================================================
-       VERY SMALL SCREENS
-    ===================================================== */
-
     @media (max-width: 420px) {
-
         .hero-title {
             font-size: 2.15rem;
         }
@@ -684,24 +639,13 @@ if start_research:
 
     st.divider()
 
-    st.subheader(
-        "Research progress"
-    )
-
+    st.subheader("Research progress")
 
     current_status = st.empty()
 
-
     progress_bar = st.progress(0)
 
-
-    status_cards = []
-
-    for _ in AGENT_ORDER:
-
-        status_cards.append(
-            st.empty()
-        )
+    status_cards = [st.empty() for _ in AGENT_ORDER]
 
 
     # ========================================================
@@ -713,50 +657,33 @@ if start_research:
         next_agent,
     ):
 
-        completed_lower = (
-            str(completed_agent)
-            .lower()
-        )
-
+        completed_lower = str(completed_agent).lower()
 
         if "planner" in completed_lower:
-
             completed_index = 0
             next_index = 1
-
         elif "research" in completed_lower:
-
             completed_index = 1
             next_index = 2
-
         elif "fact" in completed_lower:
-
             completed_index = 2
             next_index = 3
-
         else:
-
             completed_index = 3
             next_index = 4
 
 
         # ----------------------------------------------------
-        # COMPLETED
+        # COMPLETED AGENT
         # ----------------------------------------------------
 
-        completed_data = (
-            AGENT_ORDER[
-                completed_index
-            ]
-        )
+        completed_data = AGENT_ORDER[completed_index]
 
-        status_cards[
-            completed_index
-        ].markdown(
+        status_cards[completed_index].html(
             f"""
             <div class="agent-card completed">
 
-                <div class="agent-icon">
+                <div class="agent-icon" style="background:#dcfce7; color:#16a34a;">
                     ✓
                 </div>
 
@@ -774,8 +701,7 @@ if start_research:
                 </div>
 
             </div>
-            """,
-            unsafe_allow_html=True,
+            """
         )
 
 
@@ -785,14 +711,9 @@ if start_research:
 
         if next_index < len(AGENT_ORDER):
 
-            next_data = (
-                AGENT_ORDER[
-                    next_index
-                ]
-            )
+            next_data = AGENT_ORDER[next_index]
 
-
-            current_status.markdown(
+            current_status.html(
                 f"""
                 <div class="current-agent">
 
@@ -814,14 +735,10 @@ if start_research:
                     </div>
 
                 </div>
-                """,
-                unsafe_allow_html=True,
+                """
             )
 
-
-            status_cards[
-                next_index
-            ].markdown(
+            status_cards[next_index].html(
                 f"""
                 <div class="agent-card working">
 
@@ -843,10 +760,8 @@ if start_research:
                     </div>
 
                 </div>
-                """,
-                unsafe_allow_html=True,
+                """
             )
-
 
             progress_bar.progress(
                 int(
@@ -863,8 +778,7 @@ if start_research:
 
     first_agent = AGENT_ORDER[0]
 
-
-    current_status.markdown(
+    current_status.html(
         f"""
         <div class="current-agent">
 
@@ -886,14 +800,13 @@ if start_research:
             </div>
 
         </div>
-        """,
-        unsafe_allow_html=True,
+        """
     )
 
 
     # First agent
 
-    status_cards[0].markdown(
+    status_cards[0].html(
         f"""
         <div class="agent-card working">
 
@@ -915,8 +828,7 @@ if start_research:
             </div>
 
         </div>
-        """,
-        unsafe_allow_html=True,
+        """
     )
 
 
@@ -929,7 +841,7 @@ if start_research:
 
         agent = AGENT_ORDER[index]
 
-        status_cards[index].markdown(
+        status_cards[index].html(
             f"""
             <div class="agent-card waiting">
 
@@ -950,8 +862,7 @@ if start_research:
                 </div>
 
             </div>
-            """,
-            unsafe_allow_html=True,
+            """
         )
 
 
@@ -964,7 +875,6 @@ if start_research:
         research_crew = build_crew(
             status_callback=update_status
         )
-
 
         result = research_crew.kickoff(
             inputs={
@@ -983,45 +893,21 @@ if start_research:
             "✅ All research agents completed."
         )
 
-
         st.divider()
 
-        st.subheader(
-            "Research Report"
-        )
+        st.subheader("Research Report")
 
 
         # ----------------------------------------------------
         # REPORT CONTAINER
         # ----------------------------------------------------
 
-        st.html(
-            """
-            <div class="report-container">
-            """
-        )
+        report_text = result.raw if hasattr(result, "raw") else str(result)
 
-
-        if hasattr(
-            result,
-            "raw",
-        ):
-
-            st.markdown(
-                result.raw
-            )
-
-        else:
-
-            st.markdown(
-                str(result)
-            )
-
-
-        st.html(
-            """
-            </div>
-            """
+        # Wrap markdown output inside container safely
+        st.markdown(
+            f'<div class="report-container">\n\n{report_text}\n\n</div>',
+            unsafe_allow_html=True,
         )
 
 
