@@ -19,7 +19,6 @@ st.set_page_config(
 
 # ============================================================
 # CUSTOM CSS
-# Use st.html() instead of st.markdown() for HTML/CSS.
 # ============================================================
 
 st.html(
@@ -46,7 +45,6 @@ st.html(
         color: #0f172a !important;
     }
 
-    /* Force visibility on default text elements */
     .stApp p, .stApp span, .stApp label, .stApp h1, .stApp h2, .stApp h3 {
         color: #0f172a;
     }
@@ -55,6 +53,28 @@ st.html(
         max-width: 1180px;
         padding-top: 2rem;
         padding-bottom: 4rem;
+    }
+
+
+    /* =====================================================
+       INPUT AREA & TEXTBOX FIX
+    ===================================================== */
+
+    .stTextArea textarea {
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 12px !important;
+        font-size: 0.95rem !important;
+    }
+
+    .stTextArea textarea::placeholder {
+        color: #94a3b8 !important;
+    }
+
+    .stTextArea textarea:focus {
+        border-color: #6366f1 !important;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
     }
 
 
@@ -111,41 +131,18 @@ st.html(
 
 
     /* =====================================================
-       CARDS
+       CARDS & SECTION TEXT
     ===================================================== */
 
     .glass-card {
-        background: rgba(
-            255,
-            255,
-            255,
-            0.82
-        );
-        border: 1px solid
-            rgba(
-                226,
-                232,
-                240,
-                0.95
-            );
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid rgba(226, 232, 240, 0.95);
         border-radius: 22px;
         padding: 1.4rem;
-        box-shadow:
-            0 10px 35px
-            rgba(
-                15,
-                23,
-                42,
-                0.06
-            );
+        box-shadow: 0 10px 35px rgba(15, 23, 42, 0.06);
         backdrop-filter: blur(12px);
         margin-bottom: 1rem;
     }
-
-
-    /* =====================================================
-       SECTION TEXT
-    ===================================================== */
 
     .section-title {
         font-size: 1.1rem;
@@ -163,7 +160,7 @@ st.html(
 
 
     /* =====================================================
-       AGENT CARD
+       AGENT CARDS
     ===================================================== */
 
     .agent-card {
@@ -175,21 +172,12 @@ st.html(
         border: 1px solid #e2e8f0;
         background: #ffffff;
         margin-bottom: 0.7rem;
-        transition:
-            transform 0.2s ease,
-            box-shadow 0.2s ease;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .agent-card:hover {
         transform: translateY(-1px);
-        box-shadow:
-            0 8px 20px
-            rgba(
-                15,
-                23,
-                42,
-                0.06
-            );
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
     }
 
     .agent-icon {
@@ -218,54 +206,20 @@ st.html(
         margin-top: 0.15rem;
     }
 
-
-    /* =====================================================
-       AGENT STATES
-    ===================================================== */
-
     .working {
         border-color: #818cf8;
-        background:
-            linear-gradient(
-                135deg,
-                #eef2ff,
-                #ffffff
-            );
-        box-shadow:
-            0 0 0 1px
-            rgba(
-                99,
-                102,
-                241,
-                0.08
-            ),
-            0 10px 25px
-            rgba(
-                99,
-                102,
-                241,
-                0.08
-            );
+        background: linear-gradient(135deg, #eef2ff, #ffffff);
+        box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.08), 0 10px 25px rgba(99, 102, 241, 0.08);
     }
 
     .completed {
         border-color: #bbf7d0;
-        background:
-            linear-gradient(
-                135deg,
-                #f0fdf4,
-                #ffffff
-            );
+        background: linear-gradient(135deg, #f0fdf4, #ffffff);
     }
 
     .waiting {
         opacity: 0.58;
     }
-
-
-    /* =====================================================
-       CURRENT AGENT
-    ===================================================== */
 
     .current-agent {
         display: flex;
@@ -273,19 +227,8 @@ st.html(
         gap: 0.8rem;
         padding: 1rem 1.1rem;
         border-radius: 16px;
-        border: 1px solid
-            rgba(
-                129,
-                140,
-                248,
-                0.35
-            );
-        background:
-            linear-gradient(
-                135deg,
-                #eef2ff,
-                #ffffff
-            );
+        border: 1px solid rgba(129, 140, 248, 0.35);
+        background: linear-gradient(135deg, #eef2ff, #ffffff);
         margin-bottom: 1rem;
     }
 
@@ -295,14 +238,7 @@ st.html(
         min-width: 11px;
         border-radius: 50%;
         background: #6366f1;
-        box-shadow:
-            0 0 0 5px
-            rgba(
-                99,
-                102,
-                241,
-                0.12
-            );
+        box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.12);
     }
 
     .current-agent-title {
@@ -319,26 +255,15 @@ st.html(
 
 
     /* =====================================================
-       REPORT & MARKDOWN FIXES
+       REPORT CONTAINER
     ===================================================== */
 
     .report-container {
         background: #ffffff;
         border: 1px solid #e2e8f0;
         border-radius: 22px;
-        padding: clamp(
-            1.2rem,
-            4vw,
-            2.5rem
-        );
-        box-shadow:
-            0 15px 45px
-            rgba(
-                15,
-                23,
-                42,
-                0.06
-            );
+        padding: clamp(1.2rem, 4vw, 2.5rem);
+        box-shadow: 0 15px 45px rgba(15, 23, 42, 0.06);
         line-height: 1.75;
         color: #0f172a !important;
         margin-top: 1rem;
@@ -376,22 +301,12 @@ st.html(
         background-color: #f8fafc;
     }
 
-
-    /* =====================================================
-       FOOTER
-    ===================================================== */
-
     .footer {
         text-align: center;
         color: #94a3b8 !important;
         font-size: 0.78rem;
         padding-top: 2.5rem;
     }
-
-
-    /* =====================================================
-       MOBILE & RESPONSIVE
-    ===================================================== */
 
     @media (max-width: 768px) {
         .block-container {
@@ -401,10 +316,7 @@ st.html(
         }
 
         .hero {
-            padding:
-                1.5rem
-                0.5rem
-                1.5rem;
+            padding: 1.5rem 0.5rem 1.5rem;
         }
 
         .hero-title {
@@ -415,12 +327,7 @@ st.html(
             font-size: 0.95rem;
         }
 
-        .glass-card {
-            border-radius: 16px;
-            padding: 1rem;
-        }
-
-        .report-container {
+        .glass-card, .report-container {
             border-radius: 16px;
             padding: 1rem;
         }
@@ -436,24 +343,6 @@ st.html(
         }
     }
 
-    @media (max-width: 420px) {
-        .hero-title {
-            font-size: 2.15rem;
-        }
-
-        .hero-badge {
-            font-size: 0.7rem;
-        }
-
-        .hero-subtitle {
-            font-size: 0.88rem;
-        }
-
-        .section-title {
-            font-size: 1rem;
-        }
-    }
-
     </style>
     """
 )
@@ -466,22 +355,16 @@ st.html(
 st.html(
     """
     <div class="hero">
-
-        <div class="hero-badge">
-            ✦ MULTI-AGENT RESEARCH SYSTEM
-        </div>
-
+        <div class="hero-badge">✦ MULTI-AGENT RESEARCH SYSTEM</div>
         <h1 class="hero-title">
             Research smarter with<br>
             <span>AI teammates.</span>
         </h1>
-
         <p class="hero-subtitle">
             A CrewAI-powered research team that plans your question,
             searches for evidence, checks the findings, and writes
             a structured research report.
         </p>
-
     </div>
     """
 )
@@ -491,10 +374,7 @@ st.html(
 # MAIN LAYOUT
 # ============================================================
 
-left_column, right_column = st.columns(
-    [1.55, 1],
-    gap="large",
-)
+left_column, right_column = st.columns([1.55, 1], gap="large")
 
 
 # ============================================================
@@ -506,26 +386,17 @@ with left_column:
     st.html(
         """
         <div class="glass-card">
-
-            <div class="section-title">
-                What do you want to research?
-            </div>
-
+            <div class="section-title">What do you want to research?</div>
             <div class="section-description">
-                Ask a focused question. Your AI research team
-                will investigate it step by step.
+                Ask a focused question. Your AI research team will investigate it step by step.
             </div>
-
         </div>
         """
     )
 
     topic = st.text_area(
         "Research question",
-        placeholder=(
-            "Example: How is generative AI changing "
-            "software development?"
-        ),
+        placeholder="Example: How is generative AI changing software development?",
         height=150,
         label_visibility="collapsed",
     )
@@ -546,15 +417,8 @@ with right_column:
     st.html(
         """
         <div class="glass-card">
-
-            <div class="section-title">
-                Your research team
-            </div>
-
-            <div class="section-description">
-                Four specialized agents work sequentially.
-            </div>
-
+            <div class="section-title">Your research team</div>
+            <div class="section-description">Four specialized agents work sequentially.</div>
         </div>
         """
     )
@@ -564,23 +428,11 @@ with right_column:
         st.html(
             f"""
             <div class="agent-card">
-
-                <div class="agent-icon">
-                    {agent["icon"]}
-                </div>
-
+                <div class="agent-icon">{agent["icon"]}</div>
                 <div>
-
-                    <div class="agent-name">
-                        {agent["name"]}
-                    </div>
-
-                    <div class="agent-description">
-                        {agent["description"]}
-                    </div>
-
+                    <div class="agent-name">{agent["name"]}</div>
+                    <div class="agent-description">{agent["description"]}</div>
                 </div>
-
             </div>
             """
         )
@@ -592,44 +444,16 @@ with right_column:
 
 if start_research:
 
-    # --------------------------------------------------------
-    # VALIDATE QUESTION
-    # --------------------------------------------------------
-
     if not topic.strip():
-
-        st.warning(
-            "Please enter a research question first."
-        )
-
+        st.warning("Please enter a research question first.")
         st.stop()
-
-
-    # --------------------------------------------------------
-    # VALIDATE GROQ
-    # --------------------------------------------------------
 
     if not os.getenv("GROQ_API_KEY"):
-
-        st.error(
-            "GROQ_API_KEY is missing. "
-            "Add it in Streamlit Secrets."
-        )
-
+        st.error("GROQ_API_KEY is missing. Add it in Streamlit Secrets.")
         st.stop()
 
-
-    # --------------------------------------------------------
-    # VALIDATE SERPER
-    # --------------------------------------------------------
-
     if not os.getenv("SERPER_API_KEY"):
-
-        st.error(
-            "SERPER_API_KEY is missing. "
-            "Add it in Streamlit Secrets."
-        )
-
+        st.error("SERPER_API_KEY is missing. Add it in Streamlit Secrets.")
         st.stop()
 
 
@@ -642,9 +466,7 @@ if start_research:
     st.subheader("Research progress")
 
     current_status = st.empty()
-
     progress_bar = st.progress(0)
-
     status_cards = [st.empty() for _ in AGENT_ORDER]
 
 
@@ -652,10 +474,7 @@ if start_research:
     # STATUS CALLBACK
     # ========================================================
 
-    def update_status(
-        completed_agent,
-        next_agent,
-    ):
+    def update_status(completed_agent, next_agent):
 
         completed_lower = str(completed_agent).lower()
 
@@ -672,42 +491,19 @@ if start_research:
             completed_index = 3
             next_index = 4
 
-
-        # ----------------------------------------------------
-        # COMPLETED AGENT
-        # ----------------------------------------------------
-
         completed_data = AGENT_ORDER[completed_index]
 
         status_cards[completed_index].html(
             f"""
             <div class="agent-card completed">
-
-                <div class="agent-icon" style="background:#dcfce7; color:#16a34a;">
-                    ✓
-                </div>
-
+                <div class="agent-icon" style="background:#dcfce7; color:#16a34a;">✓</div>
                 <div>
-
-                    <div class="agent-name">
-                        {completed_data["name"]}
-                        — Completed
-                    </div>
-
-                    <div class="agent-description">
-                        {completed_data["description"]}
-                    </div>
-
+                    <div class="agent-name">{completed_data["name"]} — Completed</div>
+                    <div class="agent-description">{completed_data["description"]}</div>
                 </div>
-
             </div>
             """
         )
-
-
-        # ----------------------------------------------------
-        # NEXT AGENT
-        # ----------------------------------------------------
 
         if next_index < len(AGENT_ORDER):
 
@@ -716,24 +512,15 @@ if start_research:
             current_status.html(
                 f"""
                 <div class="current-agent">
-
-                    <div class="current-agent-dot">
-                    </div>
-
+                    <div class="current-agent-dot"></div>
                     <div>
-
                         <div class="current-agent-title">
-                            {next_data["icon"]}
-                            Currently working:
-                            {next_data["name"]}
+                            {next_data["icon"]} Currently working: {next_data["name"]}
                         </div>
-
                         <div class="current-agent-description">
                             {next_data["description"]}
                         </div>
-
                     </div>
-
                 </div>
                 """
             )
@@ -741,35 +528,16 @@ if start_research:
             status_cards[next_index].html(
                 f"""
                 <div class="agent-card working">
-
-                    <div class="agent-icon">
-                        {next_data["icon"]}
-                    </div>
-
+                    <div class="agent-icon">{next_data["icon"]}</div>
                     <div>
-
-                        <div class="agent-name">
-                            {next_data["name"]}
-                            — Working
-                        </div>
-
-                        <div class="agent-description">
-                            {next_data["description"]}
-                        </div>
-
+                        <div class="agent-name">{next_data["name"]} — Working</div>
+                        <div class="agent-description">{next_data["description"]}</div>
                     </div>
-
                 </div>
                 """
             )
 
-            progress_bar.progress(
-                int(
-                    next_index
-                    / len(AGENT_ORDER)
-                    * 100
-                )
-            )
+            progress_bar.progress(int(next_index / len(AGENT_ORDER) * 100))
 
 
     # ========================================================
@@ -781,86 +549,39 @@ if start_research:
     current_status.html(
         f"""
         <div class="current-agent">
-
-            <div class="current-agent-dot">
-            </div>
-
+            <div class="current-agent-dot"></div>
             <div>
-
                 <div class="current-agent-title">
-                    {first_agent["icon"]}
-                    Currently working:
-                    {first_agent["name"]}
+                    {first_agent["icon"]} Currently working: {first_agent["name"]}
                 </div>
-
-                <div class="current-agent-description">
-                    {first_agent["description"]}
-                </div>
-
+                <div class="current-agent-description">{first_agent["description"]}</div>
             </div>
-
         </div>
         """
     )
-
-
-    # First agent
 
     status_cards[0].html(
         f"""
         <div class="agent-card working">
-
-            <div class="agent-icon">
-                {first_agent["icon"]}
-            </div>
-
+            <div class="agent-icon">{first_agent["icon"]}</div>
             <div>
-
-                <div class="agent-name">
-                    {first_agent["name"]}
-                    — Working
-                </div>
-
-                <div class="agent-description">
-                    {first_agent["description"]}
-                </div>
-
+                <div class="agent-name">{first_agent["name"]} — Working</div>
+                <div class="agent-description">{first_agent["description"]}</div>
             </div>
-
         </div>
         """
     )
 
-
-    # Waiting agents
-
-    for index in range(
-        1,
-        len(AGENT_ORDER),
-    ):
-
+    for index in range(1, len(AGENT_ORDER)):
         agent = AGENT_ORDER[index]
-
         status_cards[index].html(
             f"""
             <div class="agent-card waiting">
-
-                <div class="agent-icon">
-                    {agent["icon"]}
-                </div>
-
+                <div class="agent-icon">{agent["icon"]}</div>
                 <div>
-
-                    <div class="agent-name">
-                        {agent["name"]}
-                    </div>
-
-                    <div class="agent-description">
-                        Waiting for previous agent.
-                    </div>
-
+                    <div class="agent-name">{agent["name"]}</div>
+                    <div class="agent-description">Waiting for previous agent.</div>
                 </div>
-
             </div>
             """
         )
@@ -872,58 +593,29 @@ if start_research:
 
     try:
 
-        research_crew = build_crew(
-            status_callback=update_status
-        )
+        research_crew = build_crew(status_callback=update_status)
 
-        result = research_crew.kickoff(
-            inputs={
-                "topic": topic.strip()
-            }
-        )
-
-
-        # ----------------------------------------------------
-        # COMPLETE
-        # ----------------------------------------------------
+        result = research_crew.kickoff(inputs={"topic": topic.strip()})
 
         progress_bar.progress(100)
 
-        current_status.success(
-            "✅ All research agents completed."
-        )
+        current_status.success("✅ All research agents completed.")
 
         st.divider()
 
         st.subheader("Research Report")
 
-
-        # ----------------------------------------------------
-        # REPORT CONTAINER
-        # ----------------------------------------------------
-
         report_text = result.raw if hasattr(result, "raw") else str(result)
 
-        # Wrap markdown output inside container safely
         st.markdown(
             f'<div class="report-container">\n\n{report_text}\n\n</div>',
             unsafe_allow_html=True,
         )
 
-
-    # ========================================================
-    # ERROR
-    # ========================================================
-
     except Exception as error:
 
-        current_status.error(
-            "Research stopped because an error occurred."
-        )
-
-        st.error(
-            f"Error: {error}"
-        )
+        current_status.error("Research stopped because an error occurred.")
+        st.error(f"Error: {error}")
 
 
 # ============================================================
@@ -933,8 +625,7 @@ if start_research:
 st.html(
     """
     <div class="footer">
-        ResearchFlow AI · CrewAI + Groq
-        · Evidence-driven multi-agent research
+        ResearchFlow AI · CrewAI + Groq · Evidence-driven multi-agent research
     </div>
     """
 )
