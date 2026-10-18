@@ -5,7 +5,7 @@ import streamlit as st
 from deep_translator import GoogleTranslator
 from docx import Document
 from reportlab.lib.pagesizes import letter
-from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
 
 from crew.research_crew import AGENT_ORDER, build_crew
@@ -126,7 +126,7 @@ st.html(
 
 
     /* =====================================================
-       INPUT AREA & SELECTBOX FIX
+       INPUT AREA & SLEEK SELECTBOX
     ===================================================== */
 
     .stTextArea textarea {
@@ -146,10 +146,89 @@ st.html(
         box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
     }
 
+    /* Compact Selectbox Style */
+    div[data-baseweb="select"] {
+        border-radius: 10px !important;
+    }
+
     div[data-baseweb="select"] > div {
         background-color: #ffffff !important;
-        border-radius: 12px !important;
+        border-radius: 10px !important;
+        border: 1px solid #e2e8f0 !important;
+        color: #0f172a !important;
+        font-size: 0.88rem !important;
+        min-height: 40px !important;
+    }
+
+
+    /* =====================================================
+       AESTHETIC ACTION BUTTONS & DOWNLOAD HOVER FIX
+    ===================================================== */
+
+    .stDownloadButton > button, .stButton > button {
+        border-radius: 10px !important;
+        font-weight: 600 !important;
+        font-size: 0.88rem !important;
+        letter-spacing: 0.01em !important;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
         border: 1px solid #cbd5e1 !important;
+        background: #ffffff !important;
+        color: #1e293b !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+        min-height: 40px !important;
+    }
+
+    /* Explicit Hover State Fix for Streamlit Download Buttons */
+    .stDownloadButton > button:hover, .stButton > button:hover {
+        background: #4f46e5 !important;
+        color: #ffffff !important;
+        border-color: #4f46e5 !important;
+        box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3) !important;
+        transform: translateY(-2px) !important;
+    }
+
+    .stDownloadButton > button:hover span, 
+    .stDownloadButton > button:hover p,
+    .stButton > button:hover span, 
+    .stButton > button:hover p {
+        color: #ffffff !important;
+    }
+
+    .stDownloadButton > button:active, .stButton > button:active {
+        transform: translateY(0px) !important;
+    }
+
+    /* Primary Start Button */
+    button[kind="primary"] {
+        background: linear-gradient(135deg, #4f46e5, #6366f1) !important;
+        color: #ffffff !important;
+        border: none !important;
+        box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25) !important;
+    }
+
+    button[kind="primary"]:hover {
+        background: linear-gradient(135deg, #4338ca, #4f46e5) !important;
+        box-shadow: 0 6px 20px rgba(79, 70, 229, 0.35) !important;
+    }
+
+    button[kind="primary"] span, button[kind="primary"] p {
+        color: #ffffff !important;
+    }
+
+
+    /* =====================================================
+       TOOLBAR CONTAINER
+    ===================================================== */
+
+    .control-toolbar {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 0.9rem 1.2rem;
+        box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
     }
 
 
@@ -177,11 +256,7 @@ st.html(
 
     .hero-title {
         margin: 0;
-        font-size: clamp(
-            2.3rem,
-            6vw,
-            4.5rem
-        );
+        font-size: clamp(2.3rem, 6vw, 4.5rem);
         line-height: 1.04;
         font-weight: 800;
         letter-spacing: -0.05em;
@@ -196,11 +271,7 @@ st.html(
         max-width: 720px;
         margin: 1.25rem auto 0 auto;
         color: #64748b !important;
-        font-size: clamp(
-            0.95rem,
-            2vw,
-            1.12rem
-        );
+        font-size: clamp(0.95rem, 2vw, 1.12rem);
         line-height: 1.7;
     }
 
@@ -700,30 +771,30 @@ if start_research:
 if "english_report" in st.session_state:
 
     st.divider()
+
     st.subheader("Research Report")
 
-    # Translation & Controls Block
-    with st.expander("🌐 Translate Report & Download Settings", expanded=True):
-        col_lang, col_btn = st.columns([2, 1])
+    lang_tag = st.session_state.get("current_lang", "English")
 
-        with col_lang:
+    # Compact Modern Control Toolbar
+    with st.container():
+        c_lang, c_trans_btn, c_doc, c_pdf = st.columns([1.5, 1, 1.2, 1.2], gap="small")
+
+        with c_lang:
             target_lang = st.selectbox(
-                "Convert Report Language:",
+                "Language",
                 options=["English", "Urdu", "Hindi", "Sindhi"],
-                index=["English", "Urdu", "Hindi", "Sindhi"].index(
-                    st.session_state.get("current_lang", "English")
-                ),
+                index=["English", "Urdu", "Hindi", "Sindhi"].index(lang_tag),
+                label_visibility="collapsed",
             )
 
-        with col_btn:
-            st.write(" ")
-            st.write(" ")
-            if st.button("Translate Report", use_container_width=True):
+        with c_trans_btn:
+            if st.button("🌐 Translate", use_container_width=True):
                 if target_lang == "English":
                     st.session_state["current_report"] = st.session_state["english_report"]
                     st.session_state["current_lang"] = "English"
                 else:
-                    with st.spinner(f"Translating report into {target_lang}..."):
+                    with st.spinner("Translating..."):
                         translated = translate_text(
                             st.session_state["english_report"], target_lang
                         )
@@ -731,35 +802,31 @@ if "english_report" in st.session_state:
                         st.session_state["current_lang"] = target_lang
                 st.rerun()
 
-    # Download Buttons (Uses currently active translated/original report)
-    col_dl1, col_dl2, _ = st.columns([1, 1, 2])
-    lang_tag = st.session_state.get("current_lang", "English")
+        with c_doc:
+            doc_file = create_docx(
+                st.session_state["current_report"],
+                title=f"Research Report ({lang_tag})",
+            )
+            st.download_button(
+                label=f"📄 Word ({lang_tag})",
+                data=doc_file,
+                file_name=f"Research_Report_{lang_tag}.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                use_container_width=True,
+            )
 
-    with col_dl1:
-        doc_file = create_docx(
-            st.session_state["current_report"],
-            title=f"Research Report ({lang_tag})",
-        )
-        st.download_button(
-            label=f"📄 Download Word ({lang_tag})",
-            data=doc_file,
-            file_name=f"Research_Report_{lang_tag}.docx",
-            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            use_container_width=True,
-        )
-
-    with col_dl2:
-        pdf_file = create_pdf(
-            st.session_state["current_report"],
-            title=f"Research Report ({lang_tag})",
-        )
-        st.download_button(
-            label=f"📕 Download PDF ({lang_tag})",
-            data=pdf_file,
-            file_name=f"Research_Report_{lang_tag}.pdf",
-            mime="application/pdf",
-            use_container_width=True,
-        )
+        with c_pdf:
+            pdf_file = create_pdf(
+                st.session_state["current_report"],
+                title=f"Research Report ({lang_tag})",
+            )
+            st.download_button(
+                label=f"📕 PDF ({lang_tag})",
+                data=pdf_file,
+                file_name=f"Research_Report_{lang_tag}.pdf",
+                mime="application/pdf",
+                use_container_width=True,
+            )
 
     # Display Active Report
     st.markdown(
@@ -775,7 +842,7 @@ if "english_report" in st.session_state:
 st.html(
     """
     <div class="footer">
-        ResearchFlow AI · By Sweeta · Evidence-driven multi-agent research
+        ResearchFlow AI · CrewAI + Groq · Evidence-driven multi-agent research
     </div>
     """
 )
