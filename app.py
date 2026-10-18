@@ -9,6 +9,34 @@ from crew.research_crew import AGENT_ORDER, build_crew
 # PAGE CONFIG
 # ============================================================
 
+import requests
+
+if st.button("🧪 Test Groq API"):
+    api_key = os.getenv("GROQ_API_KEY")
+
+    if not api_key:
+        st.error("GROQ_API_KEY is missing")
+    else:
+        response = requests.post(
+            "https://api.groq.com/openai/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": "openai/gpt-oss-120b",
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": "Reply exactly: Groq works"
+                    }
+                ],
+            },
+            timeout=60,
+        )
+
+        st.write("Status:", response.status_code)
+        st.write("Response:", response.text)
 st.set_page_config(
     page_title="ResearchFlow AI",
     page_icon="🔎",
