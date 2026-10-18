@@ -1,8 +1,78 @@
+import io
 import os
 
 import streamlit as st
+from deep_translator import GoogleTranslator
+from docx import Document
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
 
 from crew.research_crew import AGENT_ORDER, build_crew
+
+# ============================================================
+# HELPER FUNCTIONS FOR FILE GENERATION & TRANSLATION
+# ============================================================
+
+
+def translate_text(text: str, target_lang: str) -> str:
+    """Translates text to English, Urdu, Hindi, or Sindhi."""
+    lang_codes = {
+        "Urdu": "ur",
+        "Hindi": "hi",
+        "Sindhi": "sd",
+    }
+    if target_lang in lang_codes:
+        try:
+            translator = GoogleTranslator(
+                source="auto", target=lang_codes[target_lang]
+            )
+            # Chunking text if it exceeds single API query length limit
+            chunks = [text[i : i + 4500] for i in range(0, len(text), 4500)]
+            translated_chunks = [translator.translate(chunk) for chunk in chunks]
+            return "\n".join(translated_chunks)
+        except Exception as e:
+            st.error(f"Translation Error: {e}")
+            return text
+    return text
+
+
+def create_docx(text: str) -> io.BytesIO:
+    """Generates a Word document in memory."""
+    doc = Document()
+    doc.add_heading("Research Report", level=1)
+    for paragraph in text.split("\n"):
+        if paragraph.strip():
+            doc.add_paragraph(paragraph)
+    bio = io.BytesIO()
+    doc.save(bio)
+    bio.seek(0)
+    return bio
+
+
+def create_pdf(text: str) -> io.BytesIO:
+    """Generates a PDF document in memory."""
+    bio = io.BytesIO()
+    pdf = SimpleDocTemplate(bio, pagesize=letter)
+    styles = getSampleStyleSheet()
+    normal_style = styles["Normal"]
+    normal_style.leading = 14
+
+    story = [
+        Paragraph("<b>Research Report</b>", styles["Title"]),
+        Spacer(1, 12),
+    ]
+    for line in text.split("\n"):
+        if line.strip():
+            clean_line = (
+                line.replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;")
+            )
+            story.append(Paragraph(clean_line, normal_style))
+            story.append(Spacer(1, 6))
+
+    pdf.build(story)
+    bio.seek(0)
+    return bio
 
 
 # ============================================================
@@ -57,7 +127,7 @@ st.html(
 
 
     /* =====================================================
-       INPUT AREA & TEXTBOX FIX
+       INPUT AREA & SELECTBOX FIX
     ===================================================== */
 
     .stTextArea textarea {
@@ -75,6 +145,12 @@ st.html(
     .stTextArea textarea:focus {
         border-color: #6366f1 !important;
         box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
+    }
+
+    div[data-baseweb="select"] > div {
+        background-color: #ffffff !important;
+        border-radius: 12px !important;
+        border: 1px solid #cbd5e1 !important;
     }
 
 
@@ -397,8 +473,14 @@ with left_column:
     topic = st.text_area(
         "Research question",
         placeholder="Example: How is generative AI changing software development?",
-        height=150,
+        height=130,
         label_visibility="collapsed",
+    )
+
+    selected_language = st.selectbox(
+        "Select Report Language",
+        options=["English", "Urdu", "Hindi", "Sindhi"],
+        index=0,
     )
 
     start_research = st.button(
@@ -456,7 +538,6 @@ if start_research:
         st.error("SERPER_API_KEY is missing. Add it in Streamlit Secrets.")
         st.stop()
 
-
     # ========================================================
     # PROGRESS UI
     # ========================================================
@@ -468,7 +549,6 @@ if start_research:
     current_status = st.empty()
     progress_bar = st.progress(0)
     status_cards = [st.empty() for _ in AGENT_ORDER]
-
 
     # ========================================================
     # STATUS CALLBACK
@@ -539,7 +619,6 @@ if start_research:
 
             progress_bar.progress(int(next_index / len(AGENT_ORDER) * 100))
 
-
     # ========================================================
     # INITIAL STATE
     # ========================================================
@@ -586,7 +665,6 @@ if start_research:
             """
         )
 
-
     # ========================================================
     # RUN CREW
     # ========================================================
@@ -603,19 +681,60 @@ if start_research:
 
         st.divider()
 
-        st.subheader("Research Report")
+        raw_report = result.raw if hasattr(result, "raw") else str(result)
 
-        report_text = result.raw if hasattr(result, "raw") else str(result)
+        # Apply Translation if non-English option selected
+        if selected_language != "English":
+            with st.spinner(f"Translating report to {selected_language}..."):
+                final_report = translate_text(raw_report, selected_language)
+        else:
+            final_report = raw_report
 
-        st.markdown(
-            f'<div class="report-container">\n\n{report_text}\n\n</div>',
-            unsafe_allow_html=True,
-        )
+        # Save report text in session state for export controls
+        st.session_state["final_report"] = final_report
 
     except Exception as error:
 
         current_status.error("Research stopped because an error occurred.")
         st.error(f"Error: {error}")
+
+
+# ============================================================
+# REPORT DISPLAY & EXPORT OPTIONS
+# ============================================================
+
+if "final_report" in st.session_state:
+
+    st.subheader("Research Report")
+
+    # Export Action Buttons
+    col_dl1, col_dl2, _ = st.columns([1, 1, 2])
+
+    with col_dl1:
+        doc_file = create_docx(st.session_state["final_report"])
+        st.download_button(
+            label="📄 Download Word (.docx)",
+            data=doc_file,
+            file_name="Research_Report.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            use_container_width=True,
+        )
+
+    with col_dl2:
+        pdf_file = create_pdf(st.session_state["final_report"])
+        st.download_button(
+            label="📕 Download PDF (.pdf)",
+            data=pdf_file,
+            file_name="Research_Report.pdf",
+            mime="application/pdf",
+            use_container_width=True,
+        )
+
+    # Display Report
+    st.markdown(
+        f'<div class="report-container">\n\n{st.session_state["final_report"]}\n\n</div>',
+        unsafe_allow_html=True,
+    )
 
 
 # ============================================================
@@ -625,7 +744,7 @@ if start_research:
 st.html(
     """
     <div class="footer">
-        ResearchFlow AI · CrewAI + Groq · Evidence-driven multi-agent research
+        ResearchFlow AI · By Sweeta · Evidence-driven multi-agent research
     </div>
     """
 )
